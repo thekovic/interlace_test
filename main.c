@@ -136,20 +136,23 @@ void render_radar()
 
 void render_circle(int number_of_points)
 {
-    // Draw dot in the middle of the tracing circle to visualize better
     rdpq_set_mode_fill(color_bright);
+
+    // Draw dot in the middle of the tracing circle to visualize better
     rdpq_fill_rectangle(
         SCR_SPACE_X(TRACE_POS_X - 1),
         SCR_SPACE_Y(TRACE_POS_Y - 1),
         SCR_SPACE_X(TRACE_POS_X + 1),
         SCR_SPACE_Y(TRACE_POS_Y + 1)
     );
+    // Draw a 20px bar in the top-left half of the screen
     rdpq_fill_rectangle(
         SCR_SPACE_X(0),
         SCR_SPACE_Y(0),
         SCR_SPACE_X(INTERNAL_WIDTH / 2),
         SCR_SPACE_Y(20)
     );
+    // Draw a 20px bar in the bottom-left half of the screen
     rdpq_fill_rectangle(
         SCR_SPACE_X(INTERNAL_WIDTH / 2),
         SCR_SPACE_Y(INTERNAL_HEIGHT - 20),
@@ -157,7 +160,6 @@ void render_circle(int number_of_points)
         SCR_SPACE_Y(INTERNAL_HEIGHT)
     );
 
-    // Draw rotating circle sprite
     rdpq_set_mode_standard();
     // Set vertex array format to {X, Y} with a flat color (color set on next line)
     rdpq_mode_combiner(RDPQ_COMBINER_FLAT);
