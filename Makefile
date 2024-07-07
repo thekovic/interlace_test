@@ -11,8 +11,11 @@ all: interlace_test.z64
 interlace_test.z64: N64_ROM_TITLE="Interlace Test"
 interlace_test.z64: $(BUILD_DIR)/interlace_test.dfs
 
-$(BUILD_DIR)/interlace_test.dfs: $(wildcard filesystem/*)
-$(BUILD_DIR)/interlace_test.elf: $(src:%.c=$(BUILD_DIR)/%.o)
+filesystem/dummy.txt:
+	echo "dfs" > filesystem/dummy.txt
+
+$(BUILD_DIR)/interlace_test.dfs: $(wildcard filesystem/*) filesystem/dummy.txt
+$(BUILD_DIR)/interlace_test.elf: $(src:%.c=$(BUILD_DIR)/%.o) 
 
 clean:
 	rm -rf $(BUILD_DIR) interlace_test.z64
