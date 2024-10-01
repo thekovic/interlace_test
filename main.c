@@ -197,6 +197,8 @@ int main()
 
     update_display_mode(true);
 
+    rdpq_text_register_font(FONT_BUILTIN_DEBUG_MONO, rdpq_font_load_builtin(FONT_BUILTIN_DEBUG_MONO));
+
     for (;;)
     {
         joypad_poll();
@@ -231,6 +233,8 @@ int main()
         {
             render_circle(32);
         }
+
+        rdpq_text_printf(NULL, FONT_BUILTIN_DEBUG_MONO, SCR_SPACE_X(80), SCR_SPACE_Y(200), "Press A to switch resolution.");
 
         rdpq_detach_show();
     }
