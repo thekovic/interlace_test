@@ -23,6 +23,7 @@ static float screen_scale_y = 1.0f;
 static bool interlace_mode = false;
 static bool radar_mode = false;
 static bool stop_movement = false;
+static bool vi_adjust_mode = false;
 
 #define TRACE_POS_X (160)
 #define TRACE_POS_Y (120)
@@ -73,18 +74,14 @@ void update_display_mode(bool init)
         rspq_wait();
     }
 
-    if (interlace_mode)
-    {
-        display_init(HI_RES_MODE, DEPTH_32_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
-        color_bright = RGBA32(0,255,0,255);
-        color_dark = RGBA32(0,60,0,255);
-    }
-    else
-    {
-        display_init(LO_RES_MODE, DEPTH_32_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
-        color_bright = RGBA32(255,0,0,255);
-        color_dark = RGBA32(60,0,0,255);
-    }
+    resolution_t resolution_mode = (interlace_mode) ? HI_RES_MODE : LO_RES_MODE;
+    if (vi_adjust_mode) resolution_mode.overscan_margin = VI_CRT_MARGIN;
+    filter_options_t filter_mode = (vi_adjust_mode) ? FILTERS_RESAMPLE : FILTERS_DISABLED;
+    
+    color_bright = (interlace_mode) ? RGBA32(0,255,0,255) : RGBA32(255,0,0,255);
+    color_dark = (interlace_mode) ?  RGBA32(0,60,0,255) : RGBA32(60,0,0,255);
+
+    display_init(resolution_mode, DEPTH_32_BPP, 2, GAMMA_NONE, filter_mode);
 
     screen_scale_x = display_get_width() / INTERNAL_WIDTH;
     screen_scale_y = display_get_height() / INTERNAL_HEIGHT;
@@ -217,6 +214,11 @@ int main()
         {
             stop_movement = !stop_movement;
             trace_angular_speed = (stop_movement) ? 0 : TRACE_ANGULAR_SPEED;
+        }
+        if (buttons.r)
+        {
+            vi_adjust_mode = !vi_adjust_mode;
+            update_display_mode(false);
         }
 
         update_rotating_point(&circle_pos);
